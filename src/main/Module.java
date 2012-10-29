@@ -26,12 +26,19 @@ public class Module
 		{
 			URL url = new URL(course_urls.get(i));
 			URLConnection urlConnection = url.openConnection();				
-			InputStream inputStream = (InputStream) urlConnection.getContent();		
-			byte[] contentRaw = new byte[urlConnection.getContentLength()];
-			inputStream.read(contentRaw);
-			String content = new String(contentRaw);
-			System.out.println(content);
-			System.out.println("---------------------------------------------------");
+			InputStream inputStream = (InputStream) urlConnection.getContent();
+			if(urlConnection.getContentLength() > 0)
+			{
+				byte[] contentRaw = new byte[urlConnection.getContentLength()];
+				inputStream.read(contentRaw);
+				String content = new String(contentRaw);
+				System.out.println(content);
+				System.out.println("---------------------------------------------------");
+			}
+			else
+			{
+				System.out.println("ERROR AT THE SITE : "+course_urls.get(i));
+			}
 		}
 	}
 }
