@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 public class Module 
 {
@@ -27,18 +29,31 @@ public class Module
 		//GETTING CONTENT OF EACH OF THE URLS 
 		for(int i=0;i<course_urls.size();i++)
 		{
-			System.err.println(course_urls.get(i));
-			Thread.sleep(5000);
-			URL url = new URL(course_urls.get(i));
-			URLConnection urlConnection = url.openConnection();				
-			InputStream is = url.openConnection().getInputStream();
-			BufferedReader reader = new BufferedReader( new InputStreamReader( is )  );
-	        String line = null;
-	        while( ( line = reader.readLine() ) != null )  
-	        {
-	        	System.out.println(line);
-	        }
-		    reader.close();
+			Document doc = Jsoup.connect(course_urls.get(i)).get();
+		    String text = doc.body().text(); 
+		    System.out.println("\n\n\n\n");
+		    String[] splitString = text.split("(textbook|Textbooks)");
+		    for(int j = 0; j < splitString.length ; j ++)
+		    {
+		        System.out.println(splitString[j]+"\n"+"\n");
+		    }
+
+//			Document doc = Jsoup.connect(course_urls.get(i)).get();
+//			Elements body=doc.select(body);
+//			System.out.println(course_urls.get(i).toUpperCase());
+//			URL url = new URL(course_urls.get(i));
+//			InputStream is = url.openConnection().getInputStream();
+//			BufferedReader reader = new BufferedReader( new InputStreamReader( is )  );
+//	        String line = "";
+//			String html="";
+//	        while( ( line = reader.readLine() ) != null )  
+//	        {
+//	        	html+=(line+"\n");
+//	        }
+//			Document doc = Jsoup.parseBodyFragment(html);
+//			Element body = doc.body();
+//			System.out.println(body.text());
+//		    reader.close();
 		}
 	}
 }
