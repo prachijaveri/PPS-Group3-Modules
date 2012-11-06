@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class Main 
 {
 	private static LinkedList<CollegeCatalog> college_course = new LinkedList<CollegeCatalog>();
-	
+
 	public static void main(String args[])throws Exception
 	{
 		//READING ALL INPUT URLS FROM A TEXT FILE 

@@ -29,7 +29,7 @@ public class ProcessData
 			text=text.trim().toLowerCase();
 			text=text.substring(text.indexOf("course "));
 			c.setContent(text);
-			
+
 			System.out.println(text);
 			Elements links = doc.select("a");
 			for(int j=0;j<links.size();j++)
@@ -39,7 +39,7 @@ public class ProcessData
 			}
 		}
 	}
-	
+
 	static void getWordFrequency(CollegeCatalog c)
 	{
 		HashMap<String,Integer> unsorted_map = new HashMap<String,Integer>();
