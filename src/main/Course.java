@@ -1,5 +1,6 @@
 package main;
 
+
 import java.util.LinkedList;
 
 public class Course 

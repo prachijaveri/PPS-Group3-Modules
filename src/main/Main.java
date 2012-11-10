@@ -1,5 +1,6 @@
 package main;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,8 +21,9 @@ public class Main
 			ProcessData.getContent(cc);
 			college_course.add(cc);
 		}
+		System.out.print(college_course.size());	
 		br.close();
-		System.out.println("---------------------------------------------------");
+		System.out.println("\n---------------------------------------------------");
 		System.out.println(); 	
 	}
 }
