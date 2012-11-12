@@ -25,7 +25,7 @@ public class ProcessData
 		System.err.println(c.getUrl());
         try
 		{
-        	Thread.sleep(1000);
+        	//Thread.sleep(1000);
 			doc = Jsoup.connect(c.getUrl()).get();
 		}
 		catch (Exception e)
@@ -50,12 +50,9 @@ public class ProcessData
 				while(i.hasNext()) {
 					Element element = i.next();
 					String tag_name=element.tagName();
-//					System.out.println(tag_name);
 					if(headings.contains(tag_name))
 					{
 						String heading = element.text();
-//						System.out.println(heading);
-//						System.out.println(checkWikipedia(heading));
 					}
 					if(paragraph.contains(tag_name))
 							System.out.println(element.text());
