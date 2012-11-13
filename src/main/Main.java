@@ -28,7 +28,7 @@ public class Main
 		ProcessData.getWikiModules();
 		ProcessData.printHash();
 		//System.out.print(college_course.size());	
-		//testDB();
+		//testDB();	
 		br.close();
 		
 		//ProcessData.getWikiTitle("problems of free");
@@ -38,15 +38,14 @@ public class Main
 		System.out.println("\n---------------------------------------------------");
 		System.out.println(); 	
 	}
-	
-	public static void testDB() throws UnknownHostException{
+	public static void testDB() throws UnknownHostException
+	{
 		Mongo mongoDB = new Mongo("dbw.cs.columbia.edu", 27017);
 		DB courseDatabase = mongoDB.getDB("modules");
 		Set<String> collections = courseDatabase.getCollectionNames();
-		for(String thisCollection: collections){
+		for(String thisCollection: collections)
+		{
 			System.out.println(thisCollection);
 		}
-		
-		
 	}
 }

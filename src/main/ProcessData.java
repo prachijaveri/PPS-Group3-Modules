@@ -32,50 +32,52 @@ public class ProcessData
 	private static String topic = "math";
 	private static String topic_url = "mathematics";
 	private static int minWordCount = 12;
-	
 	private static ArrayList<String> moduleSet = new ArrayList<String>();
-	
-	private static String[] bannedWords = {
-			"and",
-			"from",
-			"in",
-			"of",
-			"to",
-			"textbook",
-			"economic",
-			"economics",
-			"additional",
-			"mit",
-			"other",
-			"ii",
-			"mw",
-			"between",
-			"such",
-			"the",
-			"ap",
-			"these",
-			"course",
-			"i",
-			"should",
-			"not",
-			"how",
-			"v",
-			"presents",
-			"or",
-			"econ",
-			"at",
-			"useful",
-			"as",
-			"a",
-			"on",
-			"be",
-			"s",
-			"-"
+	public static String [] ignoreLinks = {
+		"list",
+		"lists",
 	};
+	private static String[] bannedWords = {
+		"and",
+		"from",
+		"in",
+		"of",
+		"to",
+		"textbook",
+		"economic",
+		"economics",
+		"additional",
+		"mit",
+		"other",
+		"ii",
+		"mw",
+		"between",
+		"such",
+		"the",
+		"ap",
+		"these",
+		"course",
+		"i",
+		"should",
+		"not",
+		"how",
+		"v",
+		"presents",
+		"or",
+		"econ",
+		"at",
+		"useful",
+		"as",
+		"a",
+		"on",
+		"be",
+		"s",
+		"-"
+	};
+	
 	static void getContent(CollegeCatalog c) throws IOException
 	{
 		Document doc = null;
-		System.err.println(c.getUrl());
         try
 		{
         	Thread.sleep(1000);
@@ -91,94 +93,139 @@ public class ProcessData
 			//try and get the data from these tags
 			//gets all heading
 			//gets all pargraphs
-			//parses through al the children pages linked to that webpage
+			//parses through aLl the children pages linked to that webpage
 			String headings = "h1 h2 h3 h4 h5 h6";
 			String paragraph="p";
+			
+//			Elements children = new Elements();
+//			children.add(doc);
+//			
+//			Elements enqueue;
+//			while(children.size() != 0) {
+//				enqueue = new Elements();
+//				Iterator<Element> iterator = children.iterator();
+//				while(iterator.hasNext()) {
+//					Element element = iterator.next();
+//					tu.increment(element.tagName());
+//					enqueue.addAll(element.children());
+//					iterator.remove();
+//				}
+//				children = enqueue;
+//			}
 			Elements a = doc.select("*");
-			
-			//System.out.println(startsOrEndsWith("and gains from"));
-			
+			//System.out.println(startsOrEndsWith("and gains from"));		
 			//System.out.println(a.text());
 			parseText(a.text());									
 		}
 	}
-
-	static void getWordFrequency(CollegeCatalog c)
+	
+	public static void parseText(String allText)
 	{
-		HashMap<String,Integer> unsorted_map = new HashMap<String,Integer>();
-        ValueComparator bvc =  new ValueComparator(unsorted_map);
-        TreeMap<String,Integer> sorted_map = new TreeMap<String,Integer>(bvc);
-		String text = c.getContent();
-		String[] words = text.split("\\s+|\\W+");
-		for (String w: words)
+		//String[] wordArray1 = getWords(allText,1);
+		String[] wordArray2 = getWords(allText,2);
+		String[] wordArray3 = getWords(allText,3);
+		//System.out.println(wordArray1.length);
+		//System.out.println(wordArray3.length;
+		//System.out.println(wordArray2.length);
+		//addToHash(wordArray1);
+		addToHash(wordArray2);
+		addToHash(wordArray3);	
+	}
+	
+	public static String[] getWords(String fullString, int phraseLength)
+	{
+		//System.out.println(fullString);
+		String[] wordArray = fullString.split("\\s+");
+		String[] returnArray = new String[wordArray.length];
+		for(int i = 0; i < wordArray.length -phraseLength; i++)
 		{
-			String ww = w.toLowerCase();
-			if (ww.length() < 3)		 
-				continue;
-			if(unsorted_map.get(ww) == null)
+			String phraseToAdd = "";
+			//System.out.println(wordArray[wordArray.length- phraseLength -3]);
+			for (int j = i; j < i+phraseLength; j++) 
 			{
-				unsorted_map.put(ww, 1);
+				//CHECK FOR PUNCTUATIONS AND END OF SENTENCES.IF POSSIBLE STOP AT END OF SENTENCES AS PHRASES CANNOT BE FROM DIFFERENT SENTENCES
+				phraseToAdd =phraseToAdd.toLowerCase() + wordArray[j].toLowerCase() + " ";
+			}			
+			returnArray[i]=phraseToAdd; 
+		}
+		return returnArray;
+	}
+	
+	public static void addToHash(String[]words)
+	{
+		for (String word : words) 
+		{
+			//System.out.println(word);
+			if(!isValid(word))
+				continue;
+			if(wordMap.containsKey(word))
+			{
+				Integer wordCount = wordMap.get(word);
+				wordCount = wordCount + 1;
+				//System.out.println("Wordcount should get more than one");
+				wordMap.put(word, wordCount);
 			}
 			else
 			{
-				unsorted_map.put(ww, (unsorted_map.get(ww))+1);
+				wordMap.put(word, 1);
 			}
-		}
-		System.out.println();
-		System.out.println("---------------------------------------------------");
-		System.out.println();
-		sorted_map.putAll(unsorted_map);
-		Iterator it = sorted_map.entrySet().iterator();
-		while (it.hasNext()) 	
-		{	
-			Map.Entry pairs = (Map.Entry)it.next();
-			System.out.println(pairs.getKey() + " = " + pairs.getValue());
-			it.remove();
 		}
 	}
 	
-	public static boolean checkWikipedia(String query){
-		
-			query = URLEncoder.encode(query);
-			//System.out.println(query);
-			Document wiki;
-			String urlString ="";
-			try {
-				urlString = "http://en.wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&limit=3&search="+query;
-				
-				wiki = Jsoup.connect(urlString).get();
-				
-			} catch (IOException e) {
-				return false;
-			}
-			String text = wiki.body().text();
-			text.toLowerCase();
-			
-			if(text.contains(topic)){
-				System.out.println(urlString);
+	public static boolean isValid(String word)
+	{
+		if(word == null)
+			return false;
+		if(startsOrEndsWith(word))
+		{
+			return false;
+		}
+		if(!word.matches(".*[0-9].*") && !word.matches("[^\\p{L}\\p{N}]") &&
+			!word.contains(".") && !word.contains(",") && !word.contains("(")
+			&& !word.contains(")") && !word.contains(":")  && !word.contains(";")
+			&& !word.contains("]") && !word.contains("\"") && !word.contains("|") ) 
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean startsOrEndsWith(String phrase)
+	{
+		String[] wordArray = phrase.split(" ");
+		if(containsAny(wordArray[0])||containsAny(wordArray[wordArray.length-1]))
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean containsAny(String searchString)
+	{
+		for (int i = 0; i < bannedWords.length; i++) 
+		{
+			if(searchString.contains(bannedWords[i]))
+			{
 				return true;
 			}
-			return false;	
+		}
+		return false;
 	}
 	
-	public static String [] ignoreLinks = {
-		"list",
-		"lists",
-		
-	};
-	
-	public static void getWikiModules(){
+	public static void getWikiModules()
+	{
 		String query = topic_url;
 		//query = URLEncoder.encode(query);
 		Document wiki = null;
 		String urlString ="";
 		ArrayList<String> wikiModules = new ArrayList<String>();
-		try {
+		try 
+		{
 			urlString = "http://en.wikipedia.org/wiki/Outline_of_"+query;
-			
 			wiki = Jsoup.connect(urlString).get();
-			
-		} catch (IOException e) {
+		} 
+		catch (IOException e) 
+		{
 			//return false;
 		}
 		Elements links = wiki.select("li:not([id])");		
@@ -189,142 +236,55 @@ public class ProcessData
 		links = links.select("a:not([href*=Portal])");
 		//links = links.select("div:not([class])");
 		//links = links.select("div:not([style])");		
-		for(Element link : links){			
-			if(link.text().length() <30){				
+		for(Element link : links)
+		{			
+			//if(link.text().length() <30)
+			//{	
 				wikiModules.add(link.text());				
-			}			
+			//}			
 		}
 		int constant = wikiModules.size();
 		int restraint = constant /36;
 		Random random = new Random();
-		for (String module : wikiModules) {
+		for (String module : wikiModules) 
+		{
 			int rand = random.nextInt(restraint);
-			if(rand == restraint - 1){
-				//System.out.println(module);
+			if(rand == restraint - 1)
+			{
 				moduleSet.add(module);
 			}
 		}
-		
-		
-		
 		//String text = wiki.body().text();
 		//text.toLowerCase();
 	}
 	
-	public static String getWikiTitle(String query){
-		query = URLEncoder.encode(query);
-		//System.out.println(query);
-		Document wiki =null;
-		String urlString ="";
-		String bettertitle = "";
-		try {
-			urlString = "http://en.wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&limit=3&search="+query;
-			
-			wiki = Jsoup.connect(urlString).get();
-			
-		} catch (IOException e) {
-			//return false;
-		}
-		Elements innerResults = wiki.select("ul[class=mw-search-results] li");
-	//	Elements innerResults = searchResults.select(".searchResult");
-		Element previousResult = null;
-		for(Element result: innerResults){
-			//System.out.println(result.text());
-			//System.out.println("\n\n");
-			if(result.text().contains(topic)){
-				//System.out.println("did we get it?");
-				//if(previousResult!=null){
-				//	System.out.println(previousResult.text());	
-				//}			
-				Elements title= result.select("a[title]");
-				
-				//System.out.println(title.attr("title"));
-				bettertitle = title.attr("title");
-				//System.out.println(result.html());
-				//Element thisElements = wiki.before(result.html());
-				//System.out.println(thisElements.text());*/
-			}
-			//previousResult = result;
-		}
-		//String text = searchResults.text();		
-		//text.toLowerCase();
-		//System.out.println(text);
-		
-	//	if(text.contains(topic)){
-		//	System.out.println(urlString);
-			//return true;
-	//	}
-		//return false;	
-		return bettertitle;
-	}
-	
-	public static boolean startsOrEndsWith(String phrase){
-		String[] wordArray = phrase.split(" ");
-		if(containsAny(wordArray[0])||containsAny(wordArray[wordArray.length-1])){
-			return true;
-		}
-		return false;
-	}
-	
-	public static boolean containsAny(String searchString){
-		for (int i = 0; i < bannedWords.length; i++) {
-			if(searchString.contains(bannedWords[i])){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static String[] getWords(String fullString, int phraseLength){
-		//System.out.println(fullString);
-		String[] wordArray = fullString.split("\\s+");
-		String[] returnArray = new String[wordArray.length];
-		for(int i = 0; i < wordArray.length -phraseLength; i++){
-			String phraseToAdd = "";
-			//System.out.println(wordArray[wordArray.length- phraseLength -3]);
-			for (int j = i; j < i+phraseLength; j++) {
-				phraseToAdd =phraseToAdd.toLowerCase() + wordArray[j].toLowerCase() + " ";
-			}			
-			returnArray[i]=phraseToAdd; 
-		}
-		return returnArray;
-	}
-	
-	
-	public static void parseText(String allText){
-		//String[] wordArray1 = getWords(allText,1);
-		String[] wordArray2 = getWords(allText,2);
-		String[] wordArray3 = getWords(allText,3);
-		
-		//System.out.println(wordArray1.length);
-		System.out.println(wordArray3.length);
-		//System.out.println(wordArray2.length);
-		
-		//addToHash(wordArray1);
-		addToHash(wordArray2);
-		addToHash(wordArray3);
-		
-	}
-	
-	public static void addToHash(String[]words){
-		for (String word : words) {
-			//System.out.println(word);
-			if(!isValid(word))
-				continue;
-			
-			if(wordMap.containsKey(word)){
-				Integer wordCount = wordMap.get(word);
-				wordCount = wordCount + 1;
-				//System.out.println("Wordcount should get more than one");
-				wordMap.put(word, wordCount);
-			}
-			else{
-				wordMap.put(word, 1);
-			}
+	public static void printHash()
+	{
+		removeFromHash();
+		System.out.println("Word count:" +wordMap.size());			
+		for (String key : wordMap.keySet()) 
+		{
+			Integer count = wordMap.get(key);
+			if(count >15 && checkWikipedia(key))
+			{
+				//System.out.println(key + " "+count);
+				String betterKey =getWikiTitle(key); 
+				if(!betterKey.equals(""))
+				{
+					moduleSet.add(betterKey);
+					System.out.println(betterKey);
+				}					
+				else 
+				{
+					moduleSet.add(key);
+					System.out.println(key);
+				}
+			}							
 		}
 	}
 	
-	public static void removeFromHash(){
+	public static void removeFromHash()
+	{
 	   Iterator it = wordMap.entrySet().iterator();
 	   while (it.hasNext())
 	   {
@@ -332,58 +292,69 @@ public class ProcessData
 	      if((Integer)item.getValue()<minWordCount)
 	    	  it.remove();
 	   }
-		/*for(String word:wordMap.keySet()){
-			if(wordMap.get(word)<20){
-				wordMap.remove(word);
-			}
-		}*/
 	}
 	
-	
-	public static boolean isValid(String word){
-		boolean isValid = true;
-		if(word == null)
-			return false;
-		if(startsOrEndsWith(word)){
+	public static boolean checkWikipedia(String query)
+	{
+		query = URLEncoder.encode(query);
+		//System.out.println(query);
+		Document wiki;
+		String urlString ="";
+		try 
+		{
+			urlString = "http://en.wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&limit=3&search="+query;
+			wiki = Jsoup.connect(urlString).get();
+		} 
+		catch (IOException e) 
+		{
 			return false;
 		}
-		if(!word.matches(".*[0-9].*") && !word.matches("[^\\p{L}\\p{N}]") &&
-			!word.contains(".") && !word.contains(",") && !word.contains("(")
-			&& !word.contains(")") && !word.contains(":")  && !word.contains(";")
-			&& !word.contains("]") && !word.contains("\"") && !word.contains("|") ) 
+		String text = wiki.body().text();
+		text.toLowerCase();
+		if(text.contains(topic))
 		{
+			System.out.println(urlString);
 			return true;
 		}
-
-		return false;
-		
+		return false;	
 	}
 	
-	public static void printHash(){
-		removeFromHash();
-		System.out.println("Word count:" +wordMap.size());			
-		for (String key : wordMap.keySet()) {
-			Integer count = wordMap.get(key);
-			if(count >15 && checkWikipedia(key)){
-				//System.out.println(key + " "+count);
-				String betterKey =getWikiTitle(key); 
-				if(!betterKey.equals("")){
-					moduleSet.add(betterKey);
-					System.out.println(betterKey);
-				}					
-				else {
-					moduleSet.add(key);
-					System.out.println(key);
-				}
-				
-			}							
+	public static String getWikiTitle(String query)
+	{
+		query = URLEncoder.encode(query);
+		//System.out.println(query);
+		Document wiki =null;
+		String urlString ="";
+		String bettertitle = "";
+		try 
+		{
+			urlString = "http://en.wikipedia.org/w/index.php?title=Special%3ASearch&profile=default&limit=3&search="+query;
+			wiki = Jsoup.connect(urlString).get();
 		}
+		catch (IOException e) 
+		{
+			//return false;
+		}
+		Elements innerResults = wiki.select("ul[class=mw-search-results] li");
+		Element previousResult = null;
+		for(Element result: innerResults)
+		{
+			if(result.text().contains(topic))
+			{
+				Elements title= result.select("a[title]");
+				bettertitle = title.attr("title");
+			}
+		}
+		return bettertitle;
 	}
 	
-	public static void printDotFile() throws IOException{
+	public static void printDotFile() throws IOException
+	{
 		PrintWriter out = new PrintWriter(new FileWriter(topic+"map.dot"));
 		out.println("Graph{");
-		for (String module : moduleSet) {
+		for (String module : moduleSet) 
+		{
+			System.out.println(module);
 			Random random = new Random();
 			int index1 = random.nextInt(moduleSet.size()-1);
 			int index2 =random.nextInt(moduleSet.size()-1);
@@ -401,25 +372,4 @@ public class ProcessData
 		out.println("}");
 		out.close();
 	}
-}
-
-class ValueComparator implements Comparator<String> 
-{
-    Map<String, Integer> base;
-    public ValueComparator(Map<String, Integer> base) 
-    {
-        this.base = base;
-    }
-    // Note: this comparator imposes orderings that are inconsistent with equals.    
-    public int compare(String a, String b) 
-    {
-        if (base.get(a) >= base.get(b)) 
-        {
-            return -1;
-        } 
-        else 
-        {
-            return 1;
-        } // returning 0 would merge keys
-    }
 }
