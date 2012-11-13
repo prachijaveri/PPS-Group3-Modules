@@ -21,12 +21,19 @@ public class Main
 		while((s=br.readLine()) != null)
 		{
 			CollegeCatalog cc = new CollegeCatalog(s);
-			//ProcessData.getContent(cc);
+			//ProcessData.getWikiModules();
+			ProcessData.getContent(cc);
 			college_course.add(cc);
 		}
+		ProcessData.getWikiModules();
+		ProcessData.printHash();
 		//System.out.print(college_course.size());	
-		testDB();
+		//testDB();
 		br.close();
+		
+		//ProcessData.getWikiTitle("problems of free");
+		
+		ProcessData.printDotFile();
 		
 		System.out.println("\n---------------------------------------------------");
 		System.out.println(); 	
