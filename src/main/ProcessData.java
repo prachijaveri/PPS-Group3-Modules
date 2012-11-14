@@ -27,107 +27,64 @@ import com.mongodb.util.StringParseUtil;
 
 public class ProcessData 
 {
-	private static int FILTER_LENGTH = 200;
+	private static int FILTER_LENGTH = 2000;
 	private static HashMap<String,Integer> wordMap = new HashMap<String,Integer>();
-	private static String topic = "math";
-	private static String topic_url = "mathematics";
+	private static String topic = "computer science";
+	private static String topic_url = "computer science";
 	private static int minWordCount = 12;
 	private static ArrayList<String> moduleSet = new ArrayList<String>();
 	public static String [] ignoreLinks = {
 		"list",
 		"lists",
 	};
-	private static String[] bannedWords = {
-		"and",
-		"from",
-		"in",
-		"of",
-		"to",
-		"textbook",
-		"economic",
-		"economics",
-		"additional",
-		"mit",
-		"other",
-		"ii",
-		"mw",
-		"between",
-		"such",
-		"the",
-		"ap",
-		"these",
-		"course",
-		"i",
-		"should",
-		"not",
-		"how",
-		"v",
-		"presents",
-		"or",
-		"econ",
-		"at",
-		"useful",
-		"as",
-		"a",
-		"on",
-		"be",
-		"s",
-		"-"
-	};
+	public static String bannedWords[]={
+			"a","able","about","above","accordance","according","accordingly","across","act","actually","additional","added","adj","affected","affecting","affects","after","afterwards","again","against","ah","all","almost","alone","along","already","also","although","always","am","among","amongst","an","and","announce","another","any","anybody","anyhow","anymore","anyone","anything","anyway","anyways","anywhere","ap","apparently","approximately","are","aren","aren’t","arise","around","as","aside","ask","asking","at","auth","available","away","awfully",
+			"b","back","be","became","because","become","becomes","becoming","been","before","beforehand","begin","beginning","beginnings","begins","behind","being","believe","below","beside","besides","between","beyond","boil","born","both","brief","briefly","but","by",
+			"c","ca","came","can","cannot","can't","cause","causes","certain","certainly","co","com","come","comes","contain","containing","contains","could","couldn’t","course","courses",
+			"d","date","did","didn't","different","do","does","doesn't","doing","done","don't","down","downwards","due","during",
+			"e","each","econ","ed","edu","effect","eg","eight","eighty","either","else","elsewhere","end","ending","enough","especially","et","etc","even","ever","every","everybody","everyone","everything","everywhere","ex","except",
+			"f","far","few","ff","fifth","first","five","fix","followed","following","follows","for","former","formerly","forth","found","four","from","further","furthermore",
+			"g","gave","get","gets","getting","give","given","gives","giving","go","goes","gone","got","gotten",
+			"h","had","happens","hardly","has","hasn't","have","haven't","having","he","hed","hence","her","here","hereafter","hereby","herein","heres","hereupon","hers","herself","hes","hi","hid","him","himself","his","hither","home","how","howbeit","however","hundred",
+			"i","id","ie","if","ii","i'll","im","immediate","immediately","importance","important","in","inc","indeed","index","information","instead","into","invention","inward","is","isn't","it","itd","it'll","its","itself","i've",
+			"j","just",
+			"k","keep","keeps","kept","kg","km","know","known","knows",
+			"l","largely","last","lately","later","latter","latterly","least","less","lest","let","lets","like","liked","likely","line","little","'ll","look","looking","looks","ltd",
+			"m","made","mainly","make","makes","many","may","maybe","me","mean","means","meantime","meanwhile","merely","mg","might","million","miss","mit","ml","more","moreover","most","mostly","mr","mrs","much","mug","must","mw","my","myself",
+			"n","na","name","namely","nay","nd","near","nearly","necessarily","necessary","need","needs","neither","never","nevertheless","new","next","nine","ninety","no","nobody","non","none","nonetheless","no","one","nor","normally","nos","not","noted","nothing","now","nowhere",
+			"o","obtain","obtained","obviously","of","off","often","oh","ok","okay","old","omitted","on","once","one","ones","only","onto","or","ord","other","others","otherwise","ought","our","ours","ourselves","out","outside","over","overall","owing","own",
+			"p","page","pages","part","particular","particularly","past","per","perhaps","placed","please","plus","poorly","possible","possibly","potentially","pp","predominantly","present","presents","previously","primarily","probably","promptly","proud","provides","put",
+			"q","que","quickly","quite","qv",
+			"r","ran","rather","rd","re","readily","really","recent","recently","ref","refs","regarding","regardless","regards","related","relatively","research","respectively","resulted","resulting","results","right","run",
+			"s","said","same","saw","say","saying","says","sec","section","see","seeing","seem","seemed","seeming","seems","seen","self","selves","sent","seven","several","shall","she","shed","she'll","shes","should","shouldn't","show","showed","shown","showns","shows","significant","significantly","similar","similarly","since","six","slightly","so","some","somebody","somehow","someone","somethan","something","sometime","sometimes","somewhat","somewhere","soon","sorry","specifically","specified","specify","specifying","still","stop","strongly","sub","substantially","successfully","such","sufficiently","suggest","sup","sure",
+			"t","take","taken","taking","tell","tends","textbook","textbooks","th","than","thank","thanks","thanx","that","that'll","that’s","that've","the","their","theirs","them","themselves","then","thence","there","thereafter","thereby","thered","therefore","therein","there'll","thereof","there’re","theres","thereto","thereupon","there've","these","they","theyd","they'll","theyre","they've","think","this","those","thou","though","thousand","throug","through","throughout","thru","thus","til","tip","to","together","too","took","toward","towards","tried","tries","truly","try","trying","ts","twice","two",
+			"u","un","under","unfortunately","unless","unlike","unlikely","until","unto","up","upon","ups","us","use","used","useful","usefully","usefulness","uses","using","usually",
+			"v","value","various","'ve","very","via","viz","vol","vols","vs",
+			"w","want","wants","was","wasn't","way","we","wed","welcome","we'll","went","were","weren't","we've","what","whatever","what'll","whats","when","whence","whenever","where","whereafter","whereas","whereby","wherein","wheres","whereupon","wherever","whether","which","while","whim","whither","who","whod","whoever","whole","who'll","whom","whomever","whos","whose","why","widely","willing","wish","with","within","without","won't","words","world","would","wouldn't","www",
+			"x",
+			"y","yes","yet","you","youd","you'll","your","youre","yours","yourself","yourselves","you've",
+			"z","zero",
+			"-","!"," ","@","#","$","%","^","&","*","(",")","_","-","+","=","{","[","}","]","\"","'",":",";","<",",",">",".","?","/","|","\\","\t","\\s","\n",
+			"1","2","3","4","5","6","7","8","9","10"
+			};
 	
 	static void getContent(CollegeCatalog c) throws IOException
 	{
-		Document doc = null;
-        try
-		{
-        	Thread.sleep(1000);
-			doc = Jsoup.connect(c.getUrl()).get();
-		}
-		catch (Exception e)
-		{
-			System.out.println("Error with JSOUP "+ e);
-		}
-		if(doc != null)
-		{
-			//To get all tags names from the url
-			//try and get the data from these tags
-			//gets all heading
-			//gets all pargraphs
-			//parses through aLl the children pages linked to that webpage
-			String headings = "h1 h2 h3 h4 h5 h6";
-			String paragraph="p";
-			
-//			Elements children = new Elements();
-//			children.add(doc);
-//			
-//			Elements enqueue;
-//			while(children.size() != 0) {
-//				enqueue = new Elements();
-//				Iterator<Element> iterator = children.iterator();
-//				while(iterator.hasNext()) {
-//					Element element = iterator.next();
-//					tu.increment(element.tagName());
-//					enqueue.addAll(element.children());
-//					iterator.remove();
-//				}
-//				children = enqueue;
-//			}
-			Elements a = doc.select("*");
-			//System.out.println(startsOrEndsWith("and gains from"));		
-			//System.out.println(a.text());
-			parseText(a.text());									
-		}
+		String content = ParseHtml.parsePage(c.getUrl());
+		c.setContent(content);
+		parseText(content);									
 	}
 	
 	public static void parseText(String allText)
 	{
-		//String[] wordArray1 = getWords(allText,1);
+		String[] wordArray1 = getWords(allText,1);
 		String[] wordArray2 = getWords(allText,2);
 		String[] wordArray3 = getWords(allText,3);
 		//System.out.println(wordArray1.length);
 		//System.out.println(wordArray3.length;
 		//System.out.println(wordArray2.length);
 		//addToHash(wordArray1);
+		addToHash(wordArray1);
 		addToHash(wordArray2);
 		addToHash(wordArray3);	
 	}
@@ -145,7 +102,8 @@ public class ProcessData
 			{
 				//CHECK FOR PUNCTUATIONS AND END OF SENTENCES.IF POSSIBLE STOP AT END OF SENTENCES AS PHRASES CANNOT BE FROM DIFFERENT SENTENCES
 				phraseToAdd =phraseToAdd.toLowerCase() + wordArray[j].toLowerCase() + " ";
-			}			
+			}
+			phraseToAdd=phraseToAdd.trim().toLowerCase();
 			returnArray[i]=phraseToAdd; 
 		}
 		return returnArray;
@@ -212,9 +170,11 @@ public class ProcessData
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void getWikiModules()
 	{
 		String query = topic_url;
+		query= query.replace(" ", "_");
 		//query = URLEncoder.encode(query);
 		Document wiki = null;
 		String urlString ="";
@@ -249,7 +209,7 @@ public class ProcessData
 		for (String module : wikiModules) 
 		{
 			int rand = random.nextInt(restraint);
-			if(rand == restraint - 1)
+			if(rand == restraint - 1 && !module.equals(topic_url))
 			{
 				moduleSet.add(module);
 			}
@@ -269,15 +229,15 @@ public class ProcessData
 			{
 				//System.out.println(key + " "+count);
 				String betterKey =getWikiTitle(key); 
-				if(!betterKey.equals(""))
+				if(!betterKey.equals("") && !betterKey.equals(topic_url))
 				{
 					moduleSet.add(betterKey);
-					System.out.println(betterKey);
+					//System.out.println(betterKey);
 				}					
-				else 
+				else if (!key.equals(topic_url))
 				{
 					moduleSet.add(key);
-					System.out.println(key);
+					//System.out.println(key);
 				}
 			}							
 		}
@@ -297,7 +257,6 @@ public class ProcessData
 	public static boolean checkWikipedia(String query)
 	{
 		query = URLEncoder.encode(query);
-		//System.out.println(query);
 		Document wiki;
 		String urlString ="";
 		try 
@@ -313,7 +272,7 @@ public class ProcessData
 		text.toLowerCase();
 		if(text.contains(topic))
 		{
-			System.out.println(urlString);
+//			System.out.println(urlString);
 			return true;
 		}
 		return false;	
@@ -322,7 +281,7 @@ public class ProcessData
 	public static String getWikiTitle(String query)
 	{
 		query = URLEncoder.encode(query);
-		//System.out.println(query);
+		System.out.println(query);
 		Document wiki =null;
 		String urlString ="";
 		String bettertitle = "";
@@ -354,7 +313,7 @@ public class ProcessData
 		out.println("Graph{");
 		for (String module : moduleSet) 
 		{
-			System.out.println(module);
+			Main.addModule(new Module(module));
 			Random random = new Random();
 			int index1 = random.nextInt(moduleSet.size()-1);
 			int index2 =random.nextInt(moduleSet.size()-1);

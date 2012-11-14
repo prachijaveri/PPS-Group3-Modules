@@ -1,191 +1,128 @@
 Graph{
-Information_theory--Algebra
-Algebra--project_management_ _
-project_management_ _--Information_theory
-Glossary_of_areas_of_mathematics--Rational_numbers
-Rational_numbers--l_ _
-l_ _--Glossary_of_areas_of_mathematics
-formal_science--Mathematical_physics
-Mathematical_physics--linear
-linear--formal_science
-Babylonian_mathematics--computer_systems_ _
-computer_systems_ _--Lie_theory
-Lie_theory--Babylonian_mathematics
-Information_theory--Abacus
-Abacus--Acalculia
-Acalculia--Information_theory
-computer_systems_ _--Lie_theory
-Lie_theory--Acalculia
-Acalculia--computer_systems_ _
-technology_ _--Turing_degree
-Turing_degree--Combinatorics
-Combinatorics--technology_ _
-computer_science_  _--Vector_calculus
-Vector_calculus--Mathematics_Subject_Classification
-Mathematics_Subject_Classification--computer_science_  _
-computer_systems_ _--Expected_value
-Expected_value--Set_theory
-Set_theory--computer_systems_ _
-Number_theory--linear
-linear--Chinese_mathematics
-Chinese_mathematics--Number_theory
-Infinity--Fundamental_matrix_(computer_vision)
-Fundamental_matrix_(computer_vision)-- _web_
- _web_--Infinity
-Lie_group--Numerical_analysis
-Numerical_analysis--Rational_numbers
-Rational_numbers--Lie_group
-full_term_--Vector_calculus
-Vector_calculus--Rational_numbers
-Rational_numbers--full_term_
-Numerical_analysis--Turing_degree
-Turing_degree--Cryptography
-Cryptography--Numerical_analysis
-Mathematical_Statistics--Mathematical_fluid_dynamics
-Mathematical_fluid_dynamics--Glossary_of_areas_of_mathematics
-Glossary_of_areas_of_mathematics--Mathematical_Statistics
-Egyptian_mathematics--computer_vision_ _
-computer_vision_ _--Combinatorics
-Combinatorics--Egyptian_mathematics
-Lorentz_group--computer_systems_ _
-computer_systems_ _--Mathematical_Statistics
-Mathematical_Statistics--Lorentz_group
-Abacus--computer_science_  _
-computer_science_  _-- _modern_
- _modern_--Abacus
-Information_theory--Babylonian_mathematics
-Babylonian_mathematics--Turing_degree
-Turing_degree--Information_theory
-Rational_numbers--full_term_
-full_term_--Vector_calculus
-Vector_calculus--Rational_numbers
-Mathematical_Statistics--Differential_geometry
-Differential_geometry--Lorentz_group
-Lorentz_group--Mathematical_Statistics
-Differential_geometry--Interactive_computation
-Interactive_computation--project_management_ _
-project_management_ _--Differential_geometry
-Mathematical_anxiety--Combinatorics
-Combinatorics--Chinese_mathematics
-Chinese_mathematics--Mathematical_anxiety
-Interactive_computation--Chaos_theory
-Chaos_theory--Rational_numbers
-Rational_numbers--Interactive_computation
-Expected_value--Full_employment_theorem
-Full_employment_theorem--Lie_theory
-Lie_theory--Expected_value
-Mathematics_education--Mathematics_education
-Mathematics_education--Mathematical_fluid_dynamics
-Mathematical_fluid_dynamics--Mathematics_education
-Mathematical_anxiety-- _modern_
- _modern_--Lie_theory
-Lie_theory--Mathematical_anxiety
-Function_(mathematics)--Set_theory
-Set_theory--Vector_calculus
-Vector_calculus--Function_(mathematics)
-Abacus--Set_theory
-Set_theory--linear
-linear--Abacus
-Number_theory--Categories
-Categories--Proof_theory
-Proof_theory--Number_theory
-Lorentz_group--Lie_group
-Lie_group--Dynamical_systems
-Dynamical_systems--Lorentz_group
-computer_vision_ _--Algebra
-Algebra--Full_employment_theorem
-Full_employment_theorem--computer_vision_ _
-Expected_value--Type_theory
-Type_theory--formal_science
-formal_science--Expected_value
-Vector_calculus--Dynamical_systems
-Dynamical_systems--linear
-linear--Vector_calculus
-Algorithm--computer_science_  _
-computer_science_  _--Mathematical_anxiety
-Mathematical_anxiety--Algorithm
-Full_employment_theorem--Differential_geometry
-Differential_geometry--Abacus
-Abacus--Full_employment_theorem
-Mathematical_fluid_dynamics--Function_(mathematics)
-Function_(mathematics)--Differential_geometry
-Differential_geometry--Mathematical_fluid_dynamics
-Rational_numbers--Expected_value
-Expected_value--Infinity
-Infinity--Rational_numbers
-Mathematical_physics--computer_science_ _
-computer_science_ _--Function_(mathematics)
-Function_(mathematics)--Mathematical_physics
-Acalculia--Fundamental_matrix_(computer_vision)
-Fundamental_matrix_(computer_vision)--Mathematical_physics
-Mathematical_physics--Acalculia
-Categories--Cryptography
-Cryptography--computer_vision_ _
-computer_vision_ _--Categories
-Full_employment_theorem--full_term_
-full_term_--Proof_theory
-Proof_theory--Full_employment_theorem
- _parallel_computer_--computer_systems_ _
-computer_systems_ _--Mathematical_fluid_dynamics
-Mathematical_fluid_dynamics-- _parallel_computer_
-Lie_group--Infinity
-Infinity--Algebra
-Algebra--Lie_group
-Mathematical_fluid_dynamics--Vector_calculus
-Vector_calculus--technology_ _
-technology_ _--Mathematical_fluid_dynamics
-Combinatorics--Mathematical_fluid_dynamics
-Mathematical_fluid_dynamics--Mathematical_Statistics
-Mathematical_Statistics--Combinatorics
-Glossary_of_areas_of_mathematics--Dynamical_systems
-Dynamical_systems--full_term_
-full_term_--Glossary_of_areas_of_mathematics
-Expected_value--Lie_theory
-Lie_theory--Babylonian_mathematics
-Babylonian_mathematics--Expected_value
-Rational_numbers--Expected_value
-Expected_value--Interactive_computation
-Interactive_computation--Rational_numbers
-Fundamental_matrix_(computer_vision)-- _computer_
- _computer_--computer_science_  _
-computer_science_  _--Fundamental_matrix_(computer_vision)
-Mathematical_Statistics--Environmental_engineering_science
-Environmental_engineering_science--Information_theory
-Information_theory--Mathematical_Statistics
-Philosophy_of_mathematics--Topology
-Topology--Vector_calculus
-Vector_calculus--Philosophy_of_mathematics
-computer_security_ _--Mathematical_Statistics
-Mathematical_Statistics--Mathematics_education
-Mathematics_education--computer_security_ _
-project_management_ _--linear
-linear--Mathematical_physics
-Mathematical_physics--project_management_ _
-Proof_theory--Expected_value
-Expected_value--Mathematical_physics
-Mathematical_physics--Proof_theory
-Dynamical_systems--Mathematical_anxiety
-Mathematical_anxiety--Mathematical_anxiety
-Mathematical_anxiety--Dynamical_systems
- _computer_--Rational_numbers
-Rational_numbers--formal_science
-formal_science-- _computer_
-Philosophy_of_mathematics--Expected_value
-Expected_value--Game_theory
-Game_theory--Philosophy_of_mathematics
-Environmental_engineering_science--Set_theory
-Set_theory--Lie_theory
-Lie_theory--Environmental_engineering_science
-Algebraic_geometry--Interactive_computation
-Interactive_computation--Environmental_engineering_science
-Environmental_engineering_science--Algebraic_geometry
-technology_ _--Combinatorics
-Combinatorics--Lie_group
-Lie_group--technology_ _
-formal_science--Chinese_mathematics
-Chinese_mathematics--Interactive_computation
-Interactive_computation--formal_science
-computer_security_ _--Lorentz_group
-Lorentz_group--computer_security_ _
-computer_security_ _--computer_security_ _
+Game_theory--Real_numbers
+Real_numbers--Applied_mathematics
+Applied_mathematics--Game_theory
+History_of_geometry--Algebraic_geometry
+Algebraic_geometry--Set_theory
+Set_theory--History_of_geometry
+Pure_mathematics--Chinese_mathematics
+Chinese_mathematics--Control_theory
+Control_theory--Pure_mathematics
+Arithmetic--Mathematical_physics
+Mathematical_physics--Game_theory
+Game_theory--Arithmetic
+formal_science--Set_theory
+Set_theory--Set_theory
+Set_theory--formal_science
+Chinese_mathematics--Set_theory
+Set_theory--Set_theory
+Set_theory--Chinese_mathematics
+Numerosity_adaptation_effect--Trigonometry
+Trigonometry--Operations_research
+Operations_research--Numerosity_adaptation_effect
+Greek_mathematics--Differential_equations
+Differential_equations--Analysis
+Analysis--Greek_mathematics
+Graph_theory--algebraic
+algebraic--Chaos_theory
+Chaos_theory--Graph_theory
+Differential_equations--Calculus
+Calculus--Analysis
+Analysis--Differential_equations
+Type_theory--Information_theory
+Information_theory--Ageometresia
+Ageometresia--Type_theory
+algebraic--Glossary_of_areas_of_mathematics
+Glossary_of_areas_of_mathematics--Set_theory
+Set_theory--algebraic
+Differential_equations--Abstract_algebra
+Abstract_algebra--Mathematical_maturity
+Mathematical_maturity--Differential_equations
+Game_theory--Real_numbers
+Real_numbers--Real_numbers
+Real_numbers--Game_theory
+Differential_equations--Calculus
+Calculus--Real_numbers
+Real_numbers--Differential_equations
+Mathematical_maturity--Algebra
+Algebra--Mathematical_Reviews
+Mathematical_Reviews--Mathematical_maturity
+Egyptian_mathematics--Set_theory
+Set_theory--Geometry
+Geometry--Egyptian_mathematics
+Pure_mathematics--Geometry
+Geometry--Geometry
+Geometry--Pure_mathematics
+Glossary_of_areas_of_mathematics--formal_science
+formal_science--Chaos_theory
+Chaos_theory--Glossary_of_areas_of_mathematics
+Greek_mathematics--Game_theory
+Game_theory--Greek_mathematics
+Greek_mathematics--Greek_mathematics
+Pure_mathematics--Game_theory
+Game_theory--Information_theory
+Information_theory--Pure_mathematics
+Control_theory--Egyptian_mathematics
+Egyptian_mathematics--Chaos_theory
+Chaos_theory--Control_theory
+Dynamical_systems--Game_theory
+Game_theory--Analysis
+Analysis--Dynamical_systems
+Differential_equations--Information_theory
+Information_theory--Mathematical_Reviews
+Mathematical_Reviews--Differential_equations
+Analysis--Calculus
+Calculus--Trigonometry
+Trigonometry--Analysis
+Algebra--Ageometresia
+Ageometresia--Mathematical_physics
+Mathematical_physics--Algebra
+Applied_mathematics--Arithmetic
+Arithmetic--Differential_equations
+Differential_equations--Applied_mathematics
+Calculus--History_of_geometry
+History_of_geometry--Ageometresia
+Ageometresia--Calculus
+Numerosity_adaptation_effect--Algebra
+Algebra--Applied_mathematics
+Applied_mathematics--Numerosity_adaptation_effect
+Mathematical_Reviews--Trigonometry
+Trigonometry--Mathematical_maturity
+Mathematical_maturity--Mathematical_Reviews
+Approximate_number_system--Control_theory
+Control_theory--Game_theory
+Game_theory--Approximate_number_system
+Applied_mathematics--History_of_geometry
+History_of_geometry--History_of_geometry
+History_of_geometry--Applied_mathematics
+formal_science--Abstract_algebra
+Abstract_algebra--Abstract_algebra
+Abstract_algebra--formal_science
+Mathematical_Reviews--Operations_research
+Operations_research--linear
+linear--Mathematical_Reviews
+Control_theory--Real_numbers
+Real_numbers--Geometry
+Geometry--Control_theory
+Ageometresia--Applied_mathematics
+Applied_mathematics--Glossary_of_areas_of_mathematics
+Glossary_of_areas_of_mathematics--Ageometresia
+Chaos_theory--Approximate_number_system
+Approximate_number_system--algebraic
+algebraic--Chaos_theory
+Definitions_of_mathematics--algebraic
+algebraic--Algebraic_geometry
+Algebraic_geometry--Definitions_of_mathematics
+Natural_numbers--Real_numbers
+Real_numbers--Ageometresia
+Ageometresia--Natural_numbers
+Natural_numbers--Set_theory
+Set_theory--Greek_mathematics
+Greek_mathematics--Natural_numbers
+Differential_equations--Algebra
+Algebra--Operations_research
+Operations_research--Differential_equations
+Game_theory--algebraic
+algebraic--Ageometresia
+Ageometresia--Game_theory
 }
