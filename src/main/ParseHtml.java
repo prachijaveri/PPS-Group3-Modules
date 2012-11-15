@@ -11,7 +11,8 @@ import org.jsoup.select.Elements;
 public class ParseHtml 
 
 {
-	private static String[] course_related_words={
+	protected static String[] course_related_words=
+		{
 		"course",
 		"prerequisite",
 		"instructor",
@@ -24,8 +25,27 @@ public class ParseHtml
 		"course name",
 		
 	};
+	
+	static boolean checkLinks(String l)
+	{
+		for(int i=0;i<course_related_words.length;i++)
+		{
+			if(l.contains(course_related_words[i]))
+				return true;
+		}
+		String x[] = ProcessData.topic.split(" ");
+		for(String a:x)
+		{
+			if(l.contains(a))
+				return true;
+		}
+		return false;
+	}
+	
 	static boolean checkRelevance(String s, int x)
 	{
+		if(s==null || s=="" || s==" ")
+			return false;
 		boolean f =false;
 		int cnt =0;
 		for(int i=0;i<course_related_words.length;i++)
@@ -61,36 +81,44 @@ public class ParseHtml
 		String first_page="";
 		String all_text="";
 		LinkedList<String> urls=new LinkedList<String>();
-		boolean first_page_flag =true;
+		boolean first_page_flag = true;
 		urls.add(u);
 		while(!urls.isEmpty())
 		{
-//			System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
 			Document doc = null;
 			try
 			{
-				Thread.sleep(1000);
-				//doc = Jsoup.connect(c.getUrl()).get();
 				doc = Jsoup.connect(urls.removeFirst()).get();
+				Thread.sleep(500);
 			}
 			catch (Exception e)
 			{	
-//				System.out.println("error : "+e);
+//				System.out.println("ERROR : "+e);
 			}		
 			if(doc != null)
-			{
+			{			
 				boolean flag = true;
-				String headings = "h1 h2 h3 h4 h5 h6";
-				String paragraph="p";	
+//				String headings = "h1 h2 h3 h4 h5 h6";
+//				String paragraph="p";	
 				String ahref="a";
-				String previoustype="";
-				int para_count=0;
+//				String previoustype="";
+//				int para_count=0;
 				Elements all_tags_elements = new Elements();
-				if(first_page_flag)
-					first_page = doc.body().text(); 
+//				if(first_page_flag)
+//					first_page = doc.body().text(); 
 				all_tags_elements.add(doc);
-				if(! checkRelevance(doc.body().text() ,1))
+				if(doc.body() == null)
 					flag = false;
+				else if(! checkRelevance(doc.body().text() ,1))
+					flag = false;
+				else
+				{
+					String t = doc.body().text();
+					int index;
+					if( (index =t.indexOf("course")) > 0)
+						t =t .substring(index);
+					all_text = all_text+"\n"+t;
+				}
 				while(all_tags_elements.size() != 0 && flag) 	
 				{
 					Elements all_links = new Elements();
@@ -99,37 +127,38 @@ public class ParseHtml
 					{
 						Element element = i.next();
 						String tag_name=element.tagName();
-						if(headings.contains(tag_name))
+//						if(headings.contains(tag_name))
+//						{
+//							String heading = element.text().trim().toLowerCase();
+//							if(!heading.equals(" ") && !heading.equals("") && (checkRelevance(heading,2)) )//!! checkWithWiki()))
+//							{
+//								previoustype = "heading";
+//								para_count=0;
+////								System.out.println("HEADING\t"+heading);
+//								all_text = all_text +" "+heading;
+//							}
+//						}
+//						else if(paragraph.contains(tag_name))
+//						{	
+//							String p = element.text().toLowerCase().trim();
+//							if(!p.equals(" ") && !p.equals("")  && (previoustype.equals("heading") ||checkRelevance(p,1)) && p.split(" ").length > 10) 
+//							{
+//								para_count++;
+//								all_text = all_text +" "+p;
+//								if(para_count == 3)
+//									previoustype="";
+//							}
+//						}
+						//else 
+						if(ahref.contains(tag_name))
 						{
-							String heading = element.text().trim().toLowerCase();
-							if(!heading.equals(" ") && !heading.equals("") && (checkRelevance(heading,2)) )//!! checkWithWiki()))
-							{
-								previoustype = "heading";
-								para_count=0;
-//								System.out.println("HEADING\t"+heading);
-								all_text = all_text +" "+heading;
-							}
-						}
-						else if(paragraph.contains(tag_name))
-						{	
-							String p = element.text().toLowerCase().trim();
-							if(!p.equals(" ") && !p.equals("")  && previoustype.equals("heading") && p.split(" ").length > 10) 
-							{
-								para_count++;
-//								System.out.println("PARAGRAPH\t"+p);
-								all_text = all_text +" "+p;
-								if(para_count == 3)
-									previoustype="";
-							}
-						}
-						else if(ahref.contains(tag_name))
-						{
-							previoustype = "";
-							para_count=0;
+//							previoustype = "";
+//							para_count=0;
 							String l = element.attr("abs:href");
 							String s = element.text().toLowerCase().trim();
-							if(first_page_flag && !s.equals(" ") && !s.equals(""))
+							if(first_page_flag && !s.equals(" ") && !s.equals("") && checkLinks(l))
 							{
+								//System.out.println(l);
 								urls.add(l);
 							}
 						}
@@ -137,13 +166,15 @@ public class ParseHtml
 						i.remove();
 					}
 					all_tags_elements = all_links;
-				}							
+				}
 			}
+			first_page_flag = false;
 		}
+//		System.out.println(all_text);
+//		all_text= all_text.toLowerCase().trim();
+//		if(all_text.split(" ").length < 400)
+//			all_text=first_page;
 		System.out.println("*********************************************************");
-		System.out.println(all_text);
-		if(all_text.split(" ").length < 500)
-			return first_page;
 		return all_text;
 	}
 }

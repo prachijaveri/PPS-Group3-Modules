@@ -5,34 +5,35 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.Random;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.mongodb.util.StringParseUtil;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 
 public class ProcessData 
 {
 	private static int FILTER_LENGTH = 2000;
 	private static HashMap<String,Integer> wordMap = new HashMap<String,Integer>();
-	private static String topic = "computer science";
-	private static String topic_url = "computer science";
-	private static int minWordCount = 12;
+	protected static String topic = "computer science";
+	protected static String topic_url = "computer science";
+	private static int minWordCount = 1;
 	private static ArrayList<String> moduleSet = new ArrayList<String>();
+	
+	protected static ArrayList<Module> mSet= new ArrayList<Module>();
+	
 	public static String [] ignoreLinks = {
 		"list",
 		"lists",
@@ -68,24 +69,50 @@ public class ProcessData
 			"1","2","3","4","5","6","7","8","9","10"
 			};
 	
+	static void improveDatabase() throws UnknownHostException
+	{
+		Mongo mongoDB = new Mongo("dbw.cs.columbia.edu", 27017);
+		DB courseDatabase = mongoDB.getDB("modules");
+		if(!courseDatabase.collectionExists("banned_words"))
+		{
+			BasicDBObject newObject = new BasicDBObject();
+			newObject.put("words", bannedWords);
+			courseDatabase.createCollection("banned_words", newObject);
+		}				
+	}
+	
 	static void getContent(CollegeCatalog c) throws IOException
 	{
-		String content = ParseHtml.parsePage(c.getUrl());
+		System.out.println("Parsing: " + c.getUrl());
+		String content = ParseHtml.parsePage(c.getUrl());		
 		c.setContent(content);
 		parseText(content);									
 	}
 	
 	public static void parseText(String allText)
 	{
+		Module topicMod = new Module(topic);
 		String[] wordArray1 = getWords(allText,1);
 		String[] wordArray2 = getWords(allText,2);
 		String[] wordArray3 = getWords(allText,3);
-		//System.out.println(wordArray1.length);
-		//System.out.println(wordArray3.length;
-		//System.out.println(wordArray2.length);
+//		for(int i =0;i<wordArray1.length;i++)
+//			System.out.print(wordArray1[i]+"  ");
+//		System.out.println();
+//		for(int i =0;i<wordArray2.length;i++)
+//			System.out.print(wordArray2[i]+"  ");
+//		System.out.println();
+//		for(int i =0;i<wordArray3.length;i++)
+//			System.out.print(wordArray3[i]+"  ");
+//		System.out.println();
+//		System.out.println(wordArray1.length);
+//		System.out.println(wordArray3.length);
+//		System.out.println(wordArray2.length);
 		//addToHash(wordArray1);
+		topicMod.resetNumber();
 		addToHash(wordArray1);
+		topicMod.resetNumber();
 		addToHash(wordArray2);
+		topicMod.resetNumber();
 		addToHash(wordArray3);	
 	}
 	
@@ -100,11 +127,13 @@ public class ProcessData
 			//System.out.println(wordArray[wordArray.length- phraseLength -3]);
 			for (int j = i; j < i+phraseLength; j++) 
 			{
-				//CHECK FOR PUNCTUATIONS AND END OF SENTENCES.IF POSSIBLE STOP AT END OF SENTENCES AS PHRASES CANNOT BE FROM DIFFERENT SENTENCES
-				phraseToAdd =phraseToAdd.toLowerCase() + wordArray[j].toLowerCase() + " ";
+				String h = wordArray[j].toLowerCase() ;
+				if(!containsAny(h))
+					phraseToAdd =phraseToAdd.toLowerCase()+" "+wordArray[j].toLowerCase() +" " ;
 			}
 			phraseToAdd=phraseToAdd.trim().toLowerCase();
-			returnArray[i]=phraseToAdd; 
+			if(!phraseToAdd.equals(" ") && !phraseToAdd.equals("") && phraseToAdd != null)
+				returnArray[i]=phraseToAdd; 
 		}
 		return returnArray;
 	}
@@ -113,21 +142,34 @@ public class ProcessData
 	{
 		for (String word : words) 
 		{
-			//System.out.println(word);
+			System.out.println(word);
 			if(!isValid(word))
+			{
+				//System.out.print("123456789");
 				continue;
+			}
 			if(wordMap.containsKey(word))
 			{
 				Integer wordCount = wordMap.get(word);
 				wordCount = wordCount + 1;
-				//System.out.println("Wordcount should get more than one");
+				for(Module m : mSet)
+				{
+					if(m.getModuleDescription().equals(word))
+					{
+						m.plusCount();
+					}
+				}
+				//System.out.println("Word count should get more than one");
 				wordMap.put(word, wordCount);
 			}
 			else
 			{
+				mSet.add(new Module(word));
 				wordMap.put(word, 1);
 			}
 		}
+		Main.printAllModules();
+		System.exit(0);
 	}
 	
 	public static boolean isValid(String word)
@@ -188,6 +230,8 @@ public class ProcessData
 		{
 			//return false;
 		}
+		if(wiki == null)
+			return;
 		Elements links = wiki.select("li:not([id])");		
 		links = links.select("li:not([class])");		
 		links = links.select("a");
@@ -208,8 +252,8 @@ public class ProcessData
 		Random random = new Random();
 		for (String module : wikiModules) 
 		{
-			int rand = random.nextInt(restraint);
-			if(rand == restraint - 1 && !module.equals(topic_url))
+			//int rand = random.nextInt(restraint);
+			if(/*rand == restraint - 1 && */!module.contains(topic))
 			{
 				moduleSet.add(module);
 			}
@@ -220,22 +264,30 @@ public class ProcessData
 	
 	public static void printHash()
 	{
-		removeFromHash();
+		//removeFromHash();
 		System.out.println("Word count:" +wordMap.size());			
 		for (String key : wordMap.keySet()) 
 		{
 			Integer count = wordMap.get(key);
-			if(count >15 && checkWikipedia(key))
+			if(count >1 && checkWikipedia(key))
 			{
 				//System.out.println(key + " "+count);
 				String betterKey =getWikiTitle(key); 
-				if(!betterKey.equals("") && !betterKey.equals(topic_url))
+				if(!betterKey.equals("") && !betterKey.contains(topic))
 				{
 					moduleSet.add(betterKey);
+					for(Module m : mSet)
+					{
+						if(m.getModuleDescription().equals(key))
+						{
+							m.changeDescription(betterKey);
+						}
+					}
 					//System.out.println(betterKey);
 				}					
-				else if (!key.equals(topic_url))
+				else if (!key.contains(topic))
 				{
+//					System.out.println(key);
 					moduleSet.add(key);
 					//System.out.println(key);
 				}
@@ -281,7 +333,7 @@ public class ProcessData
 	public static String getWikiTitle(String query)
 	{
 		query = URLEncoder.encode(query);
-		System.out.println(query);
+		//System.out.println(query);
 		Document wiki =null;
 		String urlString ="";
 		String bettertitle = "";
@@ -311,10 +363,45 @@ public class ProcessData
 	{
 		PrintWriter out = new PrintWriter(new FileWriter(topic+"map.dot"));
 		out.println("Graph{");
-		for (String module : moduleSet) 
+		//moduleSet
+		
+		
+		Collections.sort(mSet, Module.relevanceComparator);
+		ArrayList<Module>mset2 = new ArrayList<Module>();
+		int topic_size = 30;
+		int numModules = 10;
+		//take 30 most referenced topics
+		//and add them to new array
+		for (int i = 0; i < mSet.size(); i++) 
 		{
-			Main.addModule(new Module(module));
-			Random random = new Random();
+			if(i<topic_size)
+			{
+				mset2.add(mSet.get(i));	
+			}						
+		}
+		
+		//Sort new set by order they came in, because that is a 
+		//"weak" dependency relationship
+		Collections.sort(mset2, Module.relevanceComparator);
+		int moduleNumber=1;
+		System.out.println("Module " + moduleNumber);
+		for(int i =0; i <mset2.size(); i++)
+		{			
+			if(i%(topic_size/numModules) ==0)
+			{
+				System.out.println("Module " + moduleNumber);
+				moduleNumber++;
+			}
+			System.out.println(mset2.get(i).getModuleDescription());			
+		}
+		
+		createGraph(relationshipCreator(10),10);
+		
+		/*for (String module : moduleSet) 
+			
+		{
+			//Main.addModule(new Module(module));
+			/*Random random = new Random();
 			int index1 = random.nextInt(moduleSet.size()-1);
 			int index2 =random.nextInt(moduleSet.size()-1);
 			int index3 = random.nextInt(moduleSet.size()-1);
@@ -327,8 +414,45 @@ public class ProcessData
 			out.println(mod1+"--"+mod2);
 			out.println(mod2+"--"+mod3);
 			out.println(mod3+"--"+mod1);			
-		}
+		}*/
 		out.println("}");
 		out.close();
+	}
+	
+	public static ArrayList<Integer> relationshipCreator(int numModules)
+	{
+		Random random = new Random();
+		ArrayList<Integer> mPerLevel = new ArrayList<Integer>();
+		int sum=0;
+		while(sum<numModules)
+		{
+			int randNum = random.nextInt(numModules)+1;
+			sum+=randNum;
+			mPerLevel.add(randNum);
+		}
+		if(sum>numModules)
+		{
+			Integer original = mPerLevel.get(mPerLevel.size()-1);
+			Integer amountOver = sum-numModules;
+			mPerLevel.set((mPerLevel.size()-1),original- amountOver);
+		}
+		return mPerLevel;
+	}
+	
+	public static void createGraph(ArrayList<Integer>numPerLevel, int numModules)
+	{
+		int tc =1;
+		for(int i =0; i<numPerLevel.size()-1; i++)
+		{
+			for (int j = 0; j < numPerLevel.get(i); j++) 
+			{
+				for (int j2 = 0; j2 < numPerLevel.get(i+1); j2++) 
+				{
+					int o =numPerLevel.get(i)+1; 
+					System.out.println("mod"+tc+ "--" +"mod"+(o+j2));	
+				}
+				tc++;
+			}
+		}
 	}
 }
