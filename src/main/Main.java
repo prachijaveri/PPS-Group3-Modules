@@ -19,7 +19,7 @@ public class Main
 		//READING ALL INPUT URLS FROM A TEXT FILE 
 		BufferedReader br = new BufferedReader(new FileReader(new File("input.txt")));
 		String s="";
-		
+				
 		ProcessData.improveDatabase();
 		while((s=br.readLine()) != null)
 		{

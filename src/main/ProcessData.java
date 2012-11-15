@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.bson.NewBSONDecoder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,8 +28,8 @@ public class ProcessData
 {
 	private static int FILTER_LENGTH = 2000;
 	private static HashMap<String,Integer> wordMap = new HashMap<String,Integer>();
-	protected static String topic = "computer science";
-	protected static String topic_url = "computer science";
+	protected static String topic = "math";
+	protected static String topic_url = "mathematics";
 	private static int minWordCount = 1;
 	private static ArrayList<String> moduleSet = new ArrayList<String>();
 	
@@ -55,12 +56,12 @@ public class ProcessData
 			"n","na","name","namely","nay","nd","near","nearly","necessarily","necessary","need","needs","neither","never","nevertheless","new","next","nine","ninety","no","nobody","non","none","nonetheless","no","one","nor","normally","nos","not","noted","nothing","now","nowhere",
 			"o","obtain","obtained","obviously","of","off","often","oh","ok","okay","old","omitted","on","once","one","ones","only","onto","or","ord","other","others","otherwise","ought","our","ours","ourselves","out","outside","over","overall","owing","own",
 			"p","page","pages","part","particular","particularly","past","per","perhaps","placed","please","plus","poorly","possible","possibly","potentially","pp","predominantly","present","presents","previously","primarily","probably","promptly","proud","provides","put",
-			"q","que","quickly","quite","qv",
+			"q","que","quickly","quite","qv","major","majors",
 			"r","ran","rather","rd","re","readily","really","recent","recently","ref","refs","regarding","regardless","regards","related","relatively","research","respectively","resulted","resulting","results","right","run",
 			"s","said","same","saw","say","saying","says","sec","section","see","seeing","seem","seemed","seeming","seems","seen","self","selves","sent","seven","several","shall","she","shed","she'll","shes","should","shouldn't","show","showed","shown","showns","shows","significant","significantly","similar","similarly","since","six","slightly","so","some","somebody","somehow","someone","somethan","something","sometime","sometimes","somewhat","somewhere","soon","sorry","specifically","specified","specify","specifying","still","stop","strongly","sub","substantially","successfully","such","sufficiently","suggest","sup","sure",
 			"t","take","taken","taking","tell","tends","textbook","textbooks","th","than","thank","thanks","thanx","that","that'll","that’s","that've","the","their","theirs","them","themselves","then","thence","there","thereafter","thereby","thered","therefore","therein","there'll","thereof","there’re","theres","thereto","thereupon","there've","these","they","theyd","they'll","theyre","they've","think","this","those","thou","though","thousand","throug","through","throughout","thru","thus","til","tip","to","together","too","took","toward","towards","tried","tries","truly","try","trying","ts","twice","two",
-			"u","un","under","unfortunately","unless","unlike","unlikely","until","unto","up","upon","ups","us","use","used","useful","usefully","usefulness","uses","using","usually",
-			"v","value","various","'ve","very","via","viz","vol","vols","vs",
+			"u","un","under","unfortunately","unless","unlike","unlikely","until","unto","up","upon","ups","us","use","used","useful","usefully","usefulness","uses","using","usually","undergraduate","degree","list","program","requirements","tutoring", "schedule", "club",
+			"v","value","various","'ve","very","via","viz","vol","vols","vs","term","school","calculator",
 			"w","want","wants","was","wasn't","way","we","wed","welcome","we'll","went","were","weren't","we've","what","whatever","what'll","whats","when","whence","whenever","where","whereafter","whereas","whereby","wherein","wheres","whereupon","wherever","whether","which","while","whim","whither","who","whod","whoever","whole","who'll","whom","whomever","whos","whose","why","widely","willing","wish","with","within","without","won't","words","world","would","wouldn't","www",
 			"x",
 			"y","yes","yet","you","youd","you'll","your","youre","yours","yourself","yourselves","you've",
@@ -81,18 +82,20 @@ public class ProcessData
 		}				
 	}
 	
-	static void getContent(CollegeCatalog c) throws IOException
+	static void getContent(CollegeCatalog c) throws IOException, InterruptedException
 	{
 		System.out.println("Parsing: " + c.getUrl());
 		String content = ParseHtml.parsePage(c.getUrl());		
 		c.setContent(content);
-		parseText(content);									
+		System.out.println(content);		
+		parseText(content);
+		
 	}
 	
 	public static void parseText(String allText)
 	{
 		Module topicMod = new Module(topic);
-		String[] wordArray1 = getWords(allText,1);
+		//String[] wordArray1 = getWords(allText,1);
 		String[] wordArray2 = getWords(allText,2);
 		String[] wordArray3 = getWords(allText,3);
 //		for(int i =0;i<wordArray1.length;i++)
@@ -108,8 +111,8 @@ public class ProcessData
 //		System.out.println(wordArray3.length);
 //		System.out.println(wordArray2.length);
 		//addToHash(wordArray1);
-		topicMod.resetNumber();
-		addToHash(wordArray1);
+		//topicMod.resetNumber();
+		//addToHash(wordArray1);
 		topicMod.resetNumber();
 		addToHash(wordArray2);
 		topicMod.resetNumber();
@@ -128,8 +131,15 @@ public class ProcessData
 			for (int j = i; j < i+phraseLength; j++) 
 			{
 				String h = wordArray[j].toLowerCase() ;
-				if(!containsAny(h))
+				//if(!containsAny(h)){					
 					phraseToAdd =phraseToAdd.toLowerCase()+" "+wordArray[j].toLowerCase() +" " ;
+					//System.out.println("phrase to add is:");
+					//System.out.println(phraseToAdd);
+				//}
+				//else{
+					//System.out.println("h is:");
+					//System.out.println(h);
+				//}
 			}
 			phraseToAdd=phraseToAdd.trim().toLowerCase();
 			if(!phraseToAdd.equals(" ") && !phraseToAdd.equals("") && phraseToAdd != null)
@@ -142,7 +152,7 @@ public class ProcessData
 	{
 		for (String word : words) 
 		{
-			System.out.println(word);
+			//System.out.println(word);
 			if(!isValid(word))
 			{
 				//System.out.print("123456789");
@@ -151,9 +161,10 @@ public class ProcessData
 			if(wordMap.containsKey(word))
 			{
 				Integer wordCount = wordMap.get(word);
-				wordCount = wordCount + 1;
+				wordCount += wordCount + 1;
+				
 				for(Module m : mSet)
-				{
+				{		
 					if(m.getModuleDescription().equals(word))
 					{
 						m.plusCount();
@@ -168,8 +179,8 @@ public class ProcessData
 				wordMap.put(word, 1);
 			}
 		}
-		Main.printAllModules();
-		System.exit(0);
+		//Main.printAllModules();
+		//System.exit(0);
 	}
 	
 	public static boolean isValid(String word)
@@ -204,7 +215,7 @@ public class ProcessData
 	{
 		for (int i = 0; i < bannedWords.length; i++) 
 		{
-			if(searchString.contains(bannedWords[i]))
+			if(searchString.equals(bannedWords[i]))
 			{
 				return true;
 			}
@@ -269,10 +280,13 @@ public class ProcessData
 		for (String key : wordMap.keySet()) 
 		{
 			Integer count = wordMap.get(key);
-			if(count >1 && checkWikipedia(key))
-			{
-				//System.out.println(key + " "+count);
-				String betterKey =getWikiTitle(key); 
+			Random rand = new Random();
+			int randNum = rand.nextInt(10) +1;
+			//randnum cuts out an order of magnitude in parsing a page
+			if(randNum ==3 && count >30 && count <12000 && checkWikipedia(key))
+			{				
+				String betterKey =getWikiTitle(key);
+				System.out.println(key + " "+count);
 				if(!betterKey.equals("") && !betterKey.contains(topic))
 				{
 					moduleSet.add(betterKey);
@@ -280,7 +294,9 @@ public class ProcessData
 					{
 						if(m.getModuleDescription().equals(key))
 						{
+							System.out.println(m.getModuleDescription());
 							m.changeDescription(betterKey);
+							System.out.println(betterKey);
 						}
 					}
 					//System.out.println(betterKey);
@@ -344,6 +360,7 @@ public class ProcessData
 		}
 		catch (IOException e) 
 		{
+			return "";
 			//return false;
 		}
 		Elements innerResults = wiki.select("ul[class=mw-search-results] li");
@@ -366,7 +383,7 @@ public class ProcessData
 		//moduleSet
 		
 		
-		Collections.sort(mSet, Module.relevanceComparator);
+		Collections.sort(mSet, Module.countComparator);
 		ArrayList<Module>mset2 = new ArrayList<Module>();
 		int topic_size = 30;
 		int numModules = 10;
